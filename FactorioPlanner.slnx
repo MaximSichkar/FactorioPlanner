@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/FactorioPlanner.Application/FactorioPlanner.Application.csproj" />
     <Project Path="src/FactorioPlanner.Domain/FactorioPlanner.Domain.csproj" />
+    <Project Path="src/FactorioPlanner.Importer/FactorioPlanner.Importer.csproj" />
     <Project Path="src/FactorioPlanner.Infrastructure/FactorioPlanner.Infrastructure.csproj" />
     <Project Path="src/FactorioPlanner.Web/FactorioPlanner.Web.csproj" />
   </Folder>

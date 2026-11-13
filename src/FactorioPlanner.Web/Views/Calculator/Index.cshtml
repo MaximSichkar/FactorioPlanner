@@ -1,0 +1,255 @@
+﻿
+@model FactorioPlanner.Web.Models.CalculatorViewModel
+
+@{
+    Layout = "_PlannerLayout";
+    ViewData["Title"] = "Планировщик фабрики";
+}
+
+<div class="planner">
+
+    <header class="planner-header">
+        <div class="planner-brand">
+            <strong>FACTORIO PLANNER</strong>
+            <span>Производственный план</span>
+        </div>
+
+        <div class="planner-actions">
+            <button type="button" disabled title="Добавим с CRUD">
+                Сохранить
+            </button>
+            <button type="button" disabled title="Добавим позднее">
+                Настройки
+            </button>
+        </div>
+    </header>
+
+    <div class="planner-tabs">
+        <span class="planner-tab active">
+            Производственная линия 1
+        </span>
+    </div>
+
+    <form asp-controller="Calculator"
+          asp-action="Index"
+          method="post"
+          class="planner-form">
+
+        <input asp-for="RecipeId" type="hidden" />
+
+        <div class="planner-block-toolbar">
+            <button type="button"
+                    id="chooseRecipe"
+                    class="planner-recipe"
+                    title="Выбрать рецепт">
+                <img src="@Url.Content("~/images/recipes/" + Model.RecipeId + ".png")"
+                     alt=""
+                     onerror="this.style.display='none'" />
+                <span>@Model.RecipeId</span>
+                <span>▾</span>
+            </button>
+
+            <label class="planner-target">
+                <span>Шт/сек</span>
+                <input asp-for="TargetProductionPerSecond"
+                       type="number"
+                       step="any"
+                       min="0.000001" />
+            </label>
+
+            <button type="submit" class="planner-run">
+                Рассчитать
+            </button>
+        </div>
+
+        <div asp-validation-summary="All"
+             class="planner-validation"></div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="planner-error" role="alert">
+                @Model.ErrorMessage
+            </div>
+        }
+
+        <section class="planner-table-area">
+
+            <div class="planner-section-heading">
+                <strong>Производственный блок</strong>
+                <span>Рецепты · Машины · Ресурсы</span>
+            </div>
+
+            <div class="planner-table-scroll">
+                <table class="planner-table">
+                    <thead>
+                        <tr>
+                            <th>Рецепт</th>
+                            <th>Машина</th>
+                            <th>Кол-во</th>
+                            <th>Точно</th>
+                            <th>Выпуск/с</th>
+                            <th>Продуктивность</th>
+                            <th>Входящие ресурсы /с</th>
+                            <th>Выход /с</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <button type="button"
+                                        class="planner-icon-button"
+                                        id="rowRecipe"
+                                        title="@Model.RecipeId">
+                                    <img src="@Url.Content("~/images/recipes/" + Model.RecipeId + ".png")"
+                                         alt=""
+                                         onerror="this.style.display='none'" />
+                                </button>
+                            </td>
+
+                            <td>
+                                <div class="planner-factory-list">
+                                    @foreach (var factory in Model.Factories)
+                                    {
+                                        <label class="planner-factory"
+                                               title="@factory.Text">
+                                            <input type="radio"
+                                                   name="FactoryId"
+                                                   value="@factory.Value"
+                                                   checked="@(factory.Value == Model.FactoryId)" />
+                                            <span>
+                                                <img src="@Url.Content("~/images/factories/" + factory.Value + ".png")"
+                                                     alt=""
+                                                     onerror="this.style.display='none'" />
+                                            </span>
+                                        </label>
+                                    }
+                                </div>
+                            </td>
+
+                            <td class="planner-number planner-highlight">
+                                @(Model.Result?.FactoryCount.ToString() ?? "—")
+                            </td>
+
+                            <td class="planner-number">
+                                @(Model.Result?.ExactFactoryCount.ToString("0.##") ?? "—")
+                            </td>
+
+                            <td class="planner-number">
+                                @(Model.Result?.TargetProductionPerSecond.ToString("0.##") ?? "—")
+                            </td>
+
+                            <td class="planner-number">
+                                @(Model.Result?.BaseProductivity.ToString("P0") ?? "—")
+                            </td>
+
+                            <td>
+                                <div class="planner-resources">
+                                    @if (Model.Result != null)
+                                    {
+                                        @foreach (var ingredient in Model.Result.Ingredients)
+                                        {
+                                            <div class="planner-resource input"
+                                                 title="@ingredient.ItemId | Требуется: @ingredient.RequiredPerSecond.ToString("0.##")/с | Максимум: @ingredient.MaximumPerSecond.ToString("0.##")/с">
+                                                <img src="@Url.Content("~/images/items/" + ingredient.ItemId + ".png")"
+                                                     alt=""
+                                                     onerror="this.style.display='none'" />
+                                                <span>@ingredient.RequiredPerSecond.ToString("0.##")</span>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="planner-resources">
+                                    @if (Model.Result != null)
+                                    {
+                                        <div class="planner-resource output"
+                                             title="@Model.Result.TargetProductId | Максимум: @Model.Result.MaximumProduction.ToString("0.##")/с">
+                                            <img src="@Url.Content("~/images/recipes/" + Model.Result.TargetProductId + ".png")"
+                                                 alt=""
+                                                 onerror="this.style.display='none'" />
+                                            <span>@Model.Result.MaximumProduction.ToString("0.##")</span>
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="planner-add-row">
+                <span>+ Добавить рецепт</span>
+                <small>Подключим после реализации цепочек</small>
+            </div>
+
+        </section>
+    </form>
+
+    <footer class="planner-statusbar">
+        <span>Factorio Space Age · Планировщик производства</span>
+        <span>Рецептов в блоке: 1</span>
+    </footer>
+</div>
+
+<dialog id="recipeDialog" class="planner-dialog">
+    <header>
+        <strong>Выбор рецепта</strong>
+        <button type="button" id="closeRecipe">✕</button>
+    </header>
+
+    <input id="recipeSearch"
+           type="search"
+           placeholder="Поиск рецепта..."
+           autocomplete="off" />
+
+    <div class="planner-recipe-grid">
+        @foreach (var recipe in Model.Recipes)
+        {
+            <a href="@Url.Action("Index", "Calculator", new { recipeId = recipe.Value })"
+               class="planner-recipe-option"
+               data-search="@recipe.Text.ToLowerInvariant()"
+               title="@recipe.Text">
+                <img src="@Url.Content("~/images/recipes/" + recipe.Value + ".png")"
+                     alt=""
+                     loading="lazy"
+                     onerror="this.style.display='none'" />
+                <span>@recipe.Text</span>
+            </a>
+        }
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        const dialog = document.getElementById("recipeDialog");
+        const search = document.getElementById("recipeSearch");
+
+        function openRecipes() {
+            dialog.showModal();
+            search.focus();
+        }
+
+        document.getElementById("chooseRecipe")
+            .addEventListener("click", openRecipes);
+
+        document.getElementById("rowRecipe")
+            .addEventListener("click", openRecipes);
+
+        document.getElementById("closeRecipe")
+            .addEventListener("click", function () {
+                dialog.close();
+            });
+
+        search.addEventListener("input", function () {
+            const value = search.value.toLowerCase().trim();
+
+            document.querySelectorAll(".planner-recipe-option")
+                .forEach(function (element) {
+                    const name = element.dataset.search || "";
+                    element.hidden = !name.includes(value);
+                });
+        });
+    </script>
+}

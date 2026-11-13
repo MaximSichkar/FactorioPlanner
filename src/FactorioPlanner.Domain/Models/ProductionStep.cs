@@ -8,6 +8,7 @@ namespace FactorioPlanner.Domain.Models
         public string RecipeId { get; set; } = string.Empty;
 
         public string FactoryId { get; set; } = string.Empty;
+        public string TargetProductId { get; set; } = string.Empty;
 
         public double TargetProductionPerSecond
         {

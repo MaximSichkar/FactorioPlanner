@@ -1,0 +1,414 @@
+﻿@model FactorioPlanner.Web.Models.ProductionPlannerViewModel
+
+@{
+    Layout = "_PlannerLayout";
+    ViewData["Title"] = "Factorio Planner";
+}
+
+<div class="planner">
+    <header class="planner-header">
+        <div class="planner-brand">
+            <strong>FACTORIO PLANNER</strong>
+            <span>Производственный план</span>
+        </div>
+        <div class="planner-actions">
+            <button type="button" disabled>Сохранить</button>
+            <button type="button" disabled>Настройки</button>
+        </div>
+    </header>
+
+    <div class="planner-tabs">
+        <span class="planner-tab active">@Model.Name</span>
+    </div>
+
+    <form asp-controller="ProductionPlanner"
+          asp-action="Index"
+          method="post"
+          class="planner-form"
+          id="plannerForm">
+
+        <input asp-for="BlockId" type="hidden" />
+        <input asp-for="Name" type="hidden" />
+
+        <input type="hidden"
+               name="rowIndex"
+               id="rowIndex"
+               value="@Model.PendingRowIndex" />
+
+        <input type="hidden"
+               name="ingredientItemId"
+               id="ingredientItemId"
+               value="@Model.PendingIngredientItemId" />
+
+        <input type="hidden"
+               name="ingredientRate"
+               id="ingredientRate"
+               value="@Model.PendingIngredientRate.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+
+        <input type="hidden"
+               name="selectedRecipeId"
+               id="selectedRecipeId"
+               value="" />
+
+
+        <div class="planner-block-toolbar">
+            <strong>Производственный блок</strong>
+
+            <button type="submit"
+                    name="command"
+                    value="calculate"
+                    id="autoCalculateButton"
+                    hidden>
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="planner-error" role="alert">
+                @Model.ErrorMessage
+            </div>
+        }
+
+        <section class="planner-table-area">
+            <div class="planner-table-scroll">
+                <table class="planner-table">
+                    <thead>
+                        <tr>
+                            <th>Рецепт</th>
+                            <th>Машина</th>
+                            <th>Выпуск/с</th>
+                            <th>Машин</th>
+                            <th>Точно</th>
+                            <th>Продуктивность</th>
+                            <th>Входящие ресурсы/с</th>
+                            <th>Выход/с</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (int i = 0; i < Model.Steps.Count; i++)
+                        {
+                            var step = Model.Steps[i];
+
+                            var calculation =
+                                Model.Result != null &&
+                                i < Model.Result.Steps.Count
+                                    ? Model.Result.Steps[i].Calculation
+                                    : null;
+
+                            <tr>
+                                <td>
+                                    <input asp-for="Steps[i].Id" type="hidden" />
+                                    <input asp-for="Steps[i].RecipeId" type="hidden" />
+                                    <input asp-for="Steps[i].TargetProductId" type="hidden" />
+
+                                    <button type="button"
+                                            class="planner-icon-button js-recipe"
+                                            data-index="@i"
+                                            title="@step.RecipeId">
+                                        <img src="@Url.Content("~/images/recipes/" + step.RecipeId + ".png")"
+                                             alt="@step.RecipeId" />
+                                    </button>
+                                </td>
+
+                                <td>
+                                    <div class="planner-factory-list">
+                                        @foreach (var factory in step.Factories)
+                                        {
+                                            <label class="planner-factory"
+                                                   title="@factory.Text">
+
+                                                <input type="radio"
+                                                       name="Steps[@i].FactoryId"
+                                                       value="@factory.Value"
+                                                       checked="@(step.FactoryId == factory.Value)" />
+
+                                                <span>
+                                                    <img src="@Url.Content("~/images/factories/" + factory.Value + ".png")"
+                                                         alt="@factory.Text" />
+                                                </span>
+                                            </label>
+                                        }
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <input asp-for="Steps[i].TargetProductionPerSecond"
+                                           type="number"
+                                           min="0.000001"
+                                           step="any"
+                                           class="planner-rate-input" />
+                                </td>
+
+                                <td class="planner-number planner-highlight">
+                                    @(calculation?.FactoryCount.ToString() ?? "—")
+                                </td>
+
+                                <td class="planner-number">
+                                    @(calculation?.ExactFactoryCount.ToString("0.##") ?? "—")
+                                </td>
+
+                                <td class="planner-number">
+                                    @(calculation?.BaseProductivity.ToString("P0") ?? "—")
+                                </td>
+
+                                <td>
+                                    <div class="planner-resources">
+                                        @if (calculation != null)
+                                        {
+                                            @foreach (var ingredient in calculation.Ingredients)
+                                            {
+                                                <button type="submit"
+                                                        name="command"
+                                                        value="addIngredient"
+                                                        class="planner-resource planner-resource-button input"
+                                                        title="Добавить производство: @ingredient.ItemId (@ingredient.RequiredPerSecond.ToString("0.##")/с)"
+                                                        onclick="document.getElementById('rowIndex').value='@i'; document.getElementById('ingredientItemId').value='@ingredient.ItemId'; document.getElementById('ingredientRate').value='@ingredient.RequiredPerSecond.ToString(System.Globalization.CultureInfo.InvariantCulture)';">
+                                                    <img src="@Url.Content("~/images/items/" + ingredient.ItemId + ".png")"
+                                                         alt="@ingredient.ItemId" />
+
+                                                    <span>
+                                                        @ingredient.RequiredPerSecond.ToString("0.##")
+                                                    </span>
+                                                </button>
+                                            }
+                                        }
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="planner-resources">
+                                        @if (calculation != null)
+                                        {
+                                            <div class="planner-resource output"
+                                                 title="@calculation.TargetProductId">
+                                                <img src="@Url.Content("~/images/recipes/" + calculation.TargetProductId + ".png")"
+                                                     alt="@calculation.TargetProductId" />
+                                                <span>
+                                                    @calculation.MaximumProduction.ToString("0.##")
+                                                </span>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <button type="submit"
+                                            name="command"
+                                            value="delete"
+                                            class="planner-delete"
+                                            onclick="document.getElementById('rowIndex').value='@i'"
+                                            title="Удалить рецепт">
+                                        ×
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="planner-add-row">
+                <button type="submit"
+                        name="command"
+                        value="add"
+                        class="planner-add-button">
+                    + Добавить рецепт
+                </button>
+
+                <span>
+                    @Model.Steps.Count рецепт(ов)
+                    @if (Model.Result != null)
+                    {
+                        <text> · @Model.Result.TotalFactoryCount машин</text>
+                    }
+                </span>
+            </div>
+        </section>
+
+        <button type="submit"
+                name="command"
+                value="refresh"
+                id="refreshPlanner"
+                hidden>
+        </button>
+
+        @if (Model.ShowRecipeChoice)
+        {
+            <dialog id="alternativeRecipeDialog"
+                    class="planner-dialog alternative-recipe-dialog">
+
+                <header>
+                    <strong>Выберите способ производства</strong>
+
+                    <button type="button"
+                            id="closeAlternativeRecipe">
+                        ✕
+                    </button>
+                </header>
+
+                <div class="alternative-recipe-target">
+                    <img src="@Url.Content("~/images/items/" + Model.PendingIngredientItemId + ".png")"
+                         alt="@Model.PendingIngredientItemId" />
+
+                    <div>
+                        <strong>@Model.PendingIngredientItemId</strong>
+                        <div>
+                            Требуется:
+                            @Model.PendingIngredientRate.ToString("0.##")/с
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alternative-recipe-list">
+                    @foreach (var recipe in Model.AlternativeRecipes)
+                    {
+                        <button type="submit"
+                                name="command"
+                                value="chooseIngredientRecipe"
+                                class="alternative-recipe-option"
+                                onclick="document.getElementById('selectedRecipeId').value = this.dataset.recipeId;"
+                                data-recipe-id="@recipe.Value">
+
+                            <img src="@Url.Content("~/images/recipes/" + recipe.Value + ".png")"
+                                 alt="@recipe.Text" />
+
+                            <span>
+                                <strong>@recipe.Text</strong>
+                                <small>@recipe.Value</small>
+                            </span>
+                        </button>
+                    }
+                </div>
+            </dialog>
+        }
+    </form>
+
+    <footer class="planner-statusbar">
+        <span>Factorio Space Age · Производственная линия</span>
+        <span>Строк: @Model.Steps.Count</span>
+    </footer>
+</div>
+
+<dialog id="recipeDialog" class="planner-dialog">
+    <header>
+        <strong>Выбор рецепта</strong>
+        <button type="button" id="closeRecipe">✕</button>
+    </header>
+
+    <input id="recipeSearch"
+           type="search"
+           placeholder="Поиск рецепта..."
+           autocomplete="off" />
+
+    <div class="planner-recipe-grid">
+        @foreach (var recipe in Model.Recipes)
+        {
+            <button type="button"
+                    class="planner-recipe-option js-select-recipe"
+                    data-id="@recipe.Value"
+                    data-search="@recipe.Text.ToLowerInvariant()"
+                    title="@recipe.Text">
+
+                <img src="@Url.Content("~/images/recipes/" + recipe.Value + ".png")"
+                     alt="" loading="lazy" />
+
+                <span>@recipe.Text</span>
+            </button>
+        }
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        const plannerForm = document.getElementById("plannerForm");
+        const recipeDialog = document.getElementById("recipeDialog");
+        const recipeSearch = document.getElementById("recipeSearch");
+        const autoCalculateButton = document.getElementById("autoCalculateButton");
+
+        let activeRow = -1;
+
+        function submitAutoCalculate() {
+            plannerForm.requestSubmit(autoCalculateButton);
+        }
+
+        document.querySelectorAll(".js-recipe").forEach(function(button) {
+            button.addEventListener("click", function() {
+                activeRow = Number(button.dataset.index);
+                recipeDialog.showModal();
+                recipeSearch.value = "";
+
+                document.querySelectorAll(".js-select-recipe").forEach(function(item) {
+                    item.hidden = false;
+                });
+
+                recipeSearch.focus();
+            });
+        });
+
+        document.querySelectorAll(".js-select-recipe").forEach(function(button) {
+            button.addEventListener("click", function() {
+                if (activeRow < 0) {
+                    return;
+                }
+
+                const recipeInput = document.getElementById(
+                    "Steps_" + activeRow + "__RecipeId"
+                );
+
+                if (recipeInput == null) {
+                    return;
+                }
+
+                recipeInput.value = button.dataset.id;
+                recipeDialog.close();
+
+                submitAutoCalculate();
+            });
+        });
+
+        document.getElementById("closeRecipe")
+            .addEventListener("click", function() {
+                recipeDialog.close();
+            });
+
+        recipeSearch.addEventListener("input", function() {
+            const value = recipeSearch.value.toLowerCase().trim();
+
+            document.querySelectorAll(".js-select-recipe")
+                .forEach(function(button) {
+                    const name = button.dataset.search || "";
+                    button.hidden = !name.includes(value);
+                });
+        });
+
+        document.querySelectorAll(".planner-rate-input").forEach(function(input) {
+            input.addEventListener("change", function() {
+                submitAutoCalculate();
+            });
+        });
+
+        document.querySelectorAll(".planner-factory-list input[type='radio']")
+            .forEach(function(radio) {
+                radio.addEventListener("change", function() {
+                    submitAutoCalculate();
+                });
+            });
+
+        const alternativeRecipeDialog =
+            document.getElementById("alternativeRecipeDialog");
+
+        if (alternativeRecipeDialog !== null) {
+            alternativeRecipeDialog.showModal();
+
+            const closeAlternativeRecipe =
+                document.getElementById("closeAlternativeRecipe");
+
+            closeAlternativeRecipe.addEventListener("click", function() {
+                alternativeRecipeDialog.close();
+            });
+        }
+
+    </script>
+}

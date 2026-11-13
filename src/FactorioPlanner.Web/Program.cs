@@ -1,7 +1,21 @@
+using FactorioPlanner.Application.Services;
+using FactorioPlanner.Application.Interfaces;
+using FactorioPlanner.Infrastructure.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddSingleton<IFactorioDataService>(
+    new FactorioDataService(
+        Path.Combine(builder.Environment.ContentRootPath, "Data")
+    )
+);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ProductionCalculationService>();
+builder.Services.AddScoped<ProductionBlockCalculationService>();
+
 
 var app = builder.Build();
 
@@ -20,10 +34,12 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=ProductionPlanner}/{action=Index}/{id?}");
+
+
 
 
 app.Run();

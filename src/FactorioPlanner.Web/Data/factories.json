@@ -1,0 +1,202 @@
+[
+  {
+    "Id": "assembling-machine-1",
+    "Name": "assembling-machine-1",
+    "CraftingSpeed": 0.5,
+    "IconPath": "/Assets/Factories/assembling-machine-1.png",
+    "ModuleSlots": 0,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "crafting",
+      "advanced-crafting"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "assembling-machine-2",
+    "Name": "assembling-machine-2",
+    "CraftingSpeed": 0.75,
+    "IconPath": "/Assets/Factories/assembling-machine-2.png",
+    "ModuleSlots": 2,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "crafting",
+      "advanced-crafting",
+      "crafting-with-fluid"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "assembling-machine-3",
+    "Name": "assembling-machine-3",
+    "CraftingSpeed": 1.25,
+    "IconPath": "/Assets/Factories/assembling-machine-3.png",
+    "ModuleSlots": 4,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "crafting",
+      "advanced-crafting",
+      "crafting-with-fluid"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "stone-furnace",
+    "Name": "stone-furnace",
+    "CraftingSpeed": 1.0,
+    "IconPath": "/Assets/Factories/stone-furnace.png",
+    "ModuleSlots": 0,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "smelting"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "steel-furnace",
+    "Name": "steel-furnace",
+    "CraftingSpeed": 2.0,
+    "IconPath": "/Assets/Factories/steel-furnace.png",
+    "ModuleSlots": 0,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "smelting"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "electric-furnace",
+    "Name": "electric-furnace",
+    "CraftingSpeed": 2.0,
+    "IconPath": "/Assets/Factories/electric-furnace.png",
+    "ModuleSlots": 2,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "smelting"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "chemical-plant",
+    "Name": "chemical-plant",
+    "CraftingSpeed": 1.0,
+    "IconPath": "/Assets/Factories/chemical-plant.png",
+    "ModuleSlots": 3,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "chemistry"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "oil-refinery",
+    "Name": "oil-refinery",
+    "CraftingSpeed": 1.0,
+    "IconPath": "/Assets/Factories/oil-refinery.png",
+    "ModuleSlots": 3,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "oil-processing"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "centrifuge",
+    "Name": "centrifuge",
+    "CraftingSpeed": 1.0,
+    "IconPath": "/Assets/Factories/centrifuge.png",
+    "ModuleSlots": 2,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "centrifuging"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "foundry",
+    "Name": "foundry",
+    "CraftingSpeed": 4.0,
+    "IconPath": "/Assets/Factories/foundry.png",
+    "ModuleSlots": 4,
+    "BaseProductivity": 0.5,
+    "SupportedCategories": [
+      "metallurgy"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "electromagnetic-plant",
+    "Name": "electromagnetic-plant",
+    "CraftingSpeed": 2.0,
+    "IconPath": "/Assets/Factories/electromagnetic-plant.png",
+    "ModuleSlots": 5,
+    "BaseProductivity": 0.5,
+    "SupportedCategories": [
+      "electromagnetics"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "biochamber",
+    "Name": "biochamber",
+    "CraftingSpeed": 2.0,
+    "IconPath": "/Assets/Factories/biochamber.png",
+    "ModuleSlots": 4,
+    "BaseProductivity": 0.5,
+    "SupportedCategories": [
+      "organic"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "cryogenic-plant",
+    "Name": "cryogenic-plant",
+    "CraftingSpeed": 2.0,
+    "IconPath": "/Assets/Factories/cryogenic-plant.png",
+    "ModuleSlots": 8,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "cryogenics"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "recycler",
+    "Name": "recycler",
+    "CraftingSpeed": 0.5,
+    "IconPath": "/Assets/Factories/recycler.png",
+    "ModuleSlots": 4,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "recycling"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  },
+  {
+    "Id": "crusher",
+    "Name": "crusher",
+    "CraftingSpeed": 1.0,
+    "IconPath": "/Assets/Factories/crusher.png",
+    "ModuleSlots": 2,
+    "BaseProductivity": 0.0,
+    "SupportedCategories": [
+      "crushing"
+    ],
+    "AllowedRecipes": [],
+    "BlockedRecipes": []
+  }
+]

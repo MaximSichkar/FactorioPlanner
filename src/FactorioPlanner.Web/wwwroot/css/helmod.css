@@ -1,0 +1,582 @@
+﻿
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.planner-body {
+    overflow: hidden;
+    background: #1c1c1c;
+    color: #eeeeee;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+}
+
+.planner-workspace {
+    width: 100%;
+    height: 100dvh;
+    padding: 6px;
+}
+
+.planner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    background: #242424;
+    border: 2px solid #555;
+}
+
+.planner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 0 0 auto;
+    min-height: 43px;
+    padding: 5px 12px;
+    background: #363636;
+    border-bottom: 2px solid #555;
+}
+
+.planner-brand {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+    .planner-brand strong {
+        color: #e9ae51;
+        letter-spacing: 1px;
+    }
+
+    .planner-brand span {
+        color: #bbb;
+    }
+
+.planner-actions {
+    display: flex;
+    gap: 5px;
+}
+
+    .planner-actions button,
+    .planner-run,
+    .planner-recipe {
+        color: #eee;
+        background: #484848;
+        border: 1px solid #777;
+        padding: 6px 12px;
+        cursor: pointer;
+    }
+
+        .planner-actions button:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+.planner-tabs {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 4px;
+    padding: 5px 8px;
+    background: #292929;
+    border-bottom: 1px solid #555;
+}
+
+.planner-tab {
+    padding: 7px 12px;
+    background: #3b3b3b;
+    border: 1px solid #606060;
+}
+
+    .planner-tab.active {
+        background: #595039;
+        border-color: #d6a34a;
+        color: #f4ca7c;
+    }
+
+.planner-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.planner-block-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: #2c2c2c;
+    border-bottom: 1px solid #555;
+}
+
+.planner-recipe {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    height: 43px;
+}
+
+    .planner-recipe img,
+    .planner-icon-button img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        image-rendering: pixelated;
+    }
+
+    .planner-recipe span:nth-child(2) {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+.planner-target {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: #bbb;
+    font-size: 11px;
+}
+
+    .planner-target input {
+        width: 105px;
+        height: 28px;
+        background: #151515;
+        color: #fff;
+        border: 1px solid #777;
+        padding: 4px 8px;
+    }
+
+.planner-run {
+    height: 43px;
+    background: #4e6940;
+    font-weight: bold;
+}
+
+.planner-table-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.planner-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    background: #3c3c3c;
+    border-bottom: 1px solid #666;
+}
+
+    .planner-section-heading span {
+        color: #aaa;
+        font-size: 11px;
+    }
+
+.planner-table-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    background: #242424;
+}
+
+.planner-table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+    .planner-table th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #373737;
+        color: #ccc;
+        font-size: 11px;
+        font-weight: normal;
+        padding: 9px 6px;
+        border: 1px solid #555;
+        white-space: nowrap;
+    }
+
+    .planner-table td {
+        height: 64px;
+        background: #2d2d2d;
+        padding: 5px;
+        border: 1px solid #505050;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .planner-table tbody tr:hover td {
+        background: #363636;
+    }
+
+.planner-number {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.planner-highlight {
+    color: #efbc6d;
+    font-size: 19px;
+}
+
+.planner-icon-button {
+    width: 44px;
+    height: 44px;
+    padding: 4px;
+    cursor: pointer;
+    border: 2px solid #777;
+    background: #454545;
+}
+
+.planner-factory-list {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    max-width: 360px;
+    overflow-x: auto;
+}
+
+.planner-factory {
+    position: relative;
+    flex: 0 0 42px;
+    cursor: pointer;
+}
+
+    .planner-factory input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+    }
+
+    .planner-factory span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        background: #414141;
+        border: 2px solid #777;
+    }
+
+    .planner-factory img {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+        image-rendering: pixelated;
+    }
+
+    .planner-factory input:checked + span {
+        border-color: #e8ae4c;
+        background: #655238;
+    }
+
+    .planner-factory input:focus-visible + span {
+        outline: 2px solid white;
+        outline-offset: 2px;
+    }
+
+.planner-resources {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    min-width: 110px;
+}
+
+.planner-resource {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    width: 48px;
+    min-height: 51px;
+    padding: 3px;
+    border: 1px solid #a48a60;
+    background: #876a3e;
+}
+
+    .planner-resource.output {
+        background: #246589;
+        border-color: #5aa9d9;
+    }
+
+    .planner-resource img {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+        image-rendering: pixelated;
+    }
+
+    .planner-resource span {
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+.planner-add-row {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 12px;
+    color: #a9a9a9;
+    background: #333;
+    border-top: 1px solid #555;
+}
+
+    .planner-add-row small {
+        color: #777;
+    }
+
+.planner-statusbar {
+    display: flex;
+    justify-content: space-between;
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    background: #323232;
+    border-top: 1px solid #555;
+    color: #aaa;
+    font-size: 11px;
+}
+
+.planner-validation,
+.planner-error {
+    color: #ffaaaa;
+    background: #442a2a;
+    padding: 0 8px;
+}
+
+    .planner-validation:empty {
+        display: none;
+    }
+
+.planner-dialog {
+    width: min(900px, 95vw);
+    max-height: 85vh;
+    padding: 0;
+    background: #252525;
+    color: #fff;
+    border: 2px solid #777;
+}
+
+    .planner-dialog::backdrop {
+        background: #000b;
+    }
+
+    .planner-dialog header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: #3b3b3b;
+    }
+
+        .planner-dialog header button {
+            background: #555;
+            color: white;
+            border: 1px solid #888;
+            cursor: pointer;
+        }
+
+#recipeSearch {
+    width: calc(100% - 20px);
+    margin: 10px;
+    padding: 9px;
+    color: #fff;
+    background: #171717;
+    border: 1px solid #666;
+}
+
+.planner-recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 5px;
+    padding: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.planner-recipe-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 4px;
+    background: #414141;
+    color: white;
+    text-decoration: none;
+    min-width: 0;
+}
+
+    .planner-recipe-option:hover {
+        background: #69583b;
+        color: white;
+    }
+
+    .planner-recipe-option[hidden] {
+        display: none;
+    }
+
+    .planner-recipe-option img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        image-rendering: pixelated;
+    }
+
+    .planner-recipe-option span {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 10px;
+    }
+
+.planner-rate-input {
+    width: 86px;
+    height: 32px;
+    padding: 5px;
+    text-align: center;
+    color: #eee;
+    background: #191919;
+    border: 1px solid #666;
+    font-size: 13px;
+}
+
+    .planner-rate-input:focus {
+        outline: 1px solid #e7b45c;
+    }
+
+.planner-add-button {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: #c5c5c5;
+    font: inherit;
+    cursor: pointer;
+}
+
+    .planner-add-button:hover {
+        color: #e7b45c;
+    }
+
+.planner-delete {
+    width: 27px;
+    height: 27px;
+    border: 1px solid #666;
+    background: #3b3b3b;
+    color: #d6a09a;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+    .planner-delete:hover {
+        background: #713737;
+        color: white;
+    }
+
+.planner-recipe-option {
+    border: 1px solid #555;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.planner-table td:last-child {
+    width: 42px;
+}
+
+.planner-resource-button {
+    cursor: pointer;
+    font: inherit;
+}
+
+    .planner-resource-button:hover {
+        filter: brightness(1.12);
+        border-color: #f0c36d;
+    }
+
+    .planner-resource-button:focus {
+        outline: 1px solid #f0c36d;
+        outline-offset: 1px;
+    }
+
+.alternative-recipe-dialog {
+    width: min(480px, 94vw);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.alternative-recipe-target {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #292929;
+    color: #eee;
+}
+
+    .alternative-recipe-target img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+.alternative-recipe-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px 0;
+}
+
+.alternative-recipe-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #555;
+    background: #353535;
+    color: #eee;
+    text-align: left;
+    cursor: pointer;
+}
+
+    .alternative-recipe-option:hover {
+        background: #4a4a4a;
+        border-color: #e7b45c;
+    }
+
+    .alternative-recipe-option img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .alternative-recipe-option span {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .alternative-recipe-option small {
+        color: #aaa;
+    }
